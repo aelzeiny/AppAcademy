@@ -1,3 +1,5 @@
+require 'byebug'
+
 class PolyTreeNode
   attr_reader :parent, :children
   attr_accessor :value
@@ -26,6 +28,26 @@ class PolyTreeNode
 
   def child?(adoptee)
     children.include?(adoptee)
+  end
+
+  def dfs(target_value)
+    return self if value == target_value
+    children.each do |child|
+      searched = child.dfs(target_value)
+      return searched unless searched.nil?
+    end
+    nil
+  end
+
+  def bfs(target_value)
+    queue = [self]
+    until queue.empty?
+      curr_node = queue.shift
+      return curr_node if curr_node.value == target_value
+      queue.concat(curr_node.children)
+    end
+
+    nil
   end
 
   def to_s
